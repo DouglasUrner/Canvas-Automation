@@ -4,7 +4,7 @@ Pull student progress info from Canvas.
 
 ## Tools
 
-**auto-score**  
+### auto_score_submissions
 
 Given an assignment on Canvas:
 
@@ -15,4 +15,10 @@ Given an assignment on Canvas:
 * For each submission
   - If url != null && (grade == null || grade_matches_current_submission == false)
   - Get the URL of the GitHub repository.
-  -
+  - Run the scorer
+* Post score and comment to Canvas.
+* Output a table / import file for Skyward.
+
+To do:
+
+* 
