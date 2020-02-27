@@ -34,5 +34,6 @@ To do:
   - Install with Homebrew (brew install python)
 * Google Docs APIs
   - [Google Docs APIv1](https://developers.google.com/docs/api/)
-  - [Google API Client](https://github.com/googleapis/google-api-ruby-client)
+  - [Google API Client for Ruby](https://github.com/googleapis/google-api-ruby-client)
+  - [Google Developers](https://developers.google.com/)
 * [Canvas Pagination](https://community.canvaslms.com/thread/1500)
