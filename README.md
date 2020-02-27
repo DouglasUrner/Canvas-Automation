@@ -33,5 +33,6 @@ To do:
   - [pip](https://pip.pypa.io/en/stable/installing/)
   - Install with Homebrew (brew install python)
 * Google Docs APIs
+  - [Google Docs APIv1](https://developers.google.com/docs/api/)
   - [Google API Client](https://github.com/googleapis/google-api-ruby-client)
 * [Canvas Pagination](https://community.canvaslms.com/thread/1500)
