@@ -1,5 +1,6 @@
 # Local
 private/
+score-*.rb
 
 # Below from GitHub
 *.gem
