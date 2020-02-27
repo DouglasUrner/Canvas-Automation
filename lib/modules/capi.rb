@@ -23,7 +23,8 @@ module CAPI
 
   def self.get(route, includes = '')
     route += append_includes(includes) if (includes != '')
-    # puts base_url + route
+    route += "#{(includes == '' ? '?' : '&')}per_page=100"
+    puts base_url + route
     begin
       response = JSON.parse(RestClient.get(base_url + route, headers))
     rescue => e
