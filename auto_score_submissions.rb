@@ -63,7 +63,7 @@ if (__FILE__ == $0)
       if (s['url'])
         puts "#{s['user']['name']} (#{s['id']}): #{s['workflow_state']} #{s['url']}"
         score_cmd = "ruby #{scorer} #{s['url']}"
-        puts score_cmd  if (debug)
+        puts score_cmd  if (@opts[:debug])
         score = %x( #{score_cmd} )
         puts score
       end
