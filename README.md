@@ -21,4 +21,7 @@ Given an assignment on Canvas:
 
 To do:
 
-* 
+* Handle pagination
+* "Friendly" course/section, assignment, and student references
+* Break out common scoring code
+* Pull URL out of a Google Doc
