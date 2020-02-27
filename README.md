@@ -37,3 +37,7 @@ To do:
   - [Google API Client for Ruby](https://github.com/googleapis/google-api-ruby-client)
   - [Google Developers](https://developers.google.com/)
 * [Canvas Pagination](https://community.canvaslms.com/thread/1500)
+* YAML
+  - [Psych](https://ruby-doc.org/stdlib-2.1.0/libdoc/psych/rdoc/Psych.html#method-c-load_stream)
+  - [YAML Cookbook for Ruby](https://yaml.org/YAML_for_ruby.html)
+  - [Robot Has No Heart: YAML Tutorial](https://rhnh.net/2011/01/31/yaml-tutorial/)
