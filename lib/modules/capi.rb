@@ -21,7 +21,7 @@ module CAPI
     }
   end
 
-  def self.get(route)
+  def self.get(route, includes = '')
     route += "?include[]=#{append_includes(includes)}" if (includes != '')
     begin
       response = RestClient.get(base_url + route, headers)
