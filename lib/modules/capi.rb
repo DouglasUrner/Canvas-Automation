@@ -22,9 +22,10 @@ module CAPI
   end
 
   def self.get(route, includes = '')
-    route += "?include[]=#{append_includes(includes)}" if (includes != '')
+    route += append_includes(includes) if (includes != '')
+    # puts base_url + route
     begin
-      response = RestClient.get(base_url + route, headers)
+      response = JSON.parse(RestClient.get(base_url + route, headers))
     rescue => e
       e.response
     end
@@ -35,12 +36,12 @@ module CAPI
     get(route, includes)
   end
 
-  def self.submission(cid, uid, aid, includes = '')
+  def self.submission(cid, aid, uid, includes = '')
     route = "/v1/courses/#{cid}/assignments/#{aid}/submissions/#{uid}"
     get(route, includes)
   end
 
-  def self.submissions(cid, uid, includes = '')
+  def self.submissions(cid, aid, includes = '')
     route = "/v1/courses/#{cid}/assignments/#{aid}/submissions"
     get(route, includes)
   end
