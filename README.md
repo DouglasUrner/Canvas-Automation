@@ -25,3 +25,7 @@ To do:
 * "Friendly" course/section, assignment, and student references
 * Break out common scoring code
 * Pull URL out of a Google Doc
+
+## Notes
+
+[Python 3 Unity YAML Parser](https://pypi.org/project/unityparser/)
