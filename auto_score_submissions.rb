@@ -60,7 +60,8 @@ if (__FILE__ == $0)
   else
     response = CAPI::submissions(@opts[:course], @opts[:assignment], %w[user])
     response.each do |s|
-      if (s['url'])
+      if (s['url'] && s['workflow_state'] == 'submitted' &&
+            !s['grade_matches_current_assignment'])
         puts "#{s['user']['name']} (#{s['id']}): #{s['workflow_state']} #{s['url']}"
         score_cmd = "ruby #{scorer} #{s['url']}"
         puts score_cmd  if (@opts[:debug])
