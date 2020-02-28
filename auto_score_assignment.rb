@@ -42,6 +42,8 @@ if (__FILE__ == $0)
 
   remote = ARGV.pop
 
+  points, comment = CASL::clone_and_score(remote, '')
+
   CASL::done(@score, @comments, @resubmit)
 
 end

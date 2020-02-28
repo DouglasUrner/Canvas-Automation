@@ -2,26 +2,12 @@
 
 module CASL
   require 'open3'         # Used by clone().
-  include Open3
+  class << self
+    # Per GBS - squelch undefined method `popen3' error that cropped up
+    # when creating the module.
+    include Open3
+  end
   require 'pathname'
-
-  # OPTS = {
-  #   base_url: 'https://github.com/',
-  #   branch: 'lesson-1',
-  #   clone: 'git clone',
-  #   debug: false,
-  #   empty_script_size: 323,
-  #   gitignore_size: 500,
-  #   max_points: 9,
-  #   resubmit_threshold: 0.7,
-  #   scene: "Prototype 4.unity",
-  #   tmp_dir: 'tmp',
-  #   verbose: false
-  # }
-  #
-  # @score = 0
-  # @comments = []
-  # @resubmit = false
 
   def self.done(score, comments, resubmit)
     if (OPTS[:debug])
@@ -43,7 +29,7 @@ module CASL
     exit
   end
 
-  def clone_and_score(url, path)
+  def self.clone_and_score( url, path = local_from_remote(url) )
 
     # Attempt to clone the repository.
     #
@@ -51,6 +37,8 @@ module CASL
     # - Success: the URL clones successfuly.
     # - Failure: the URL "looks" good, but failed to clone - perhaps a private repo.
     # - Failure: the URL does not match the expected pattern.
+
+    # path = local_from_remote(url) if (path == '')
 
     if (clone(url, path) == 0)
       # Success
@@ -149,7 +137,7 @@ module CASL
     return points, msg
   end
 
-  def clone(url, path)
+  def self.clone(url, path)
     cmd = "#{OPTS[:clone]} #{url} #{path}"
 
     fd0, fd1, fd2, wait = popen3(cmd)
@@ -255,5 +243,11 @@ module CASL
     end
     puts "check_script(#{script_path}): returning - points = #{points}; msg = \'#{msg}\'"  if (debug)
     return points, msg
+  end
+
+  def local_from_remote(remote)
+    local = remote.gsub(OPTS[:base_url], '')
+    local = "#{OPTS[:tmp_dir]}/#{local}" if (OPTS[:tmp_dir])
+    local.gsub(/^.*\//, '')
   end
 end
