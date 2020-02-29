@@ -28,6 +28,9 @@ To do:
 
 ## Notes
 
+* Canvas API
+  - [Live API Docs](https://canvas.instructure.com/doc/api/live)
+
 * [Python 3 Unity YAML Parser](https://pypi.org/project/unityparser/)
   - Python > 3.5
   - [pip](https://pip.pypa.io/en/stable/installing/)
