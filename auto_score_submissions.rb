@@ -113,7 +113,7 @@ if (__FILE__ == $0)
       url = get_repo_url(s)
       puts "#{s['user']['name']} (#{s['user']['id']}): #{s['submission_type']} #{s['workflow_state']} #{s['grade_matches_current_assignment']} #{url}"
       if (s['workflow_state'] == 'submitted' &&
-            !s['grade_matches_current_assignment'])
+            s['grade_matches_current_assignment'] != true)
         score_assignment(scorer, url)
       end
     end
