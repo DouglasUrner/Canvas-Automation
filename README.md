@@ -1,4 +1,4 @@
-# Canvas TDD
+# Canvas Automation
 
 Pull student progress info from Canvas.
 
