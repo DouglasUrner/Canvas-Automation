@@ -41,3 +41,8 @@ To do:
   - [Psych](https://ruby-doc.org/stdlib-2.1.0/libdoc/psych/rdoc/Psych.html#method-c-load_stream)
   - [YAML Cookbook for Ruby](https://yaml.org/YAML_for_ruby.html)
   - [Robot Has No Heart: YAML Tutorial](https://rhnh.net/2011/01/31/yaml-tutorial/)
+  - [How do I break a string over multiple lines?](https://stackoverflow.com/questions/3790454/how-do-i-break-a-string-over-multiple-lines)
+* PDF Disassembly
+  - [Yomu](https://github.com/yomurb/yomu)
+  - [Nokogiri]()
+  - [Indexing PDF For Searching Using Tika, Nokogiri, and Algolia](https://stories.algolia.com/indexing-pdf-or-other-file-contents-for-searching-b2499c23568f)
