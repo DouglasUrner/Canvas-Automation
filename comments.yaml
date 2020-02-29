@@ -1,0 +1,8 @@
+unable_to_clone: |
+  Unable to clone \'#{url}\'.
+unable_to_clone_suggestions: |
+  Please check that your repository isn't private.
+
+  In GitHub Desktop a lock icon will appear next to the repository name if the repository is marked private. To fix it, click on the View on GitHub button in GitHub Desktop, then on the GitHub webite you can make the repository public under the Settings tab.
+branch_not_found: |
+  You don't seem to have a branch with the changes you made for this lesson in your repository. I was looking for a 'lesson-1' branch. This may be because you used a different branch name (or made a typo). It could also have happened because all of your changes were made on the 'master' branch.
