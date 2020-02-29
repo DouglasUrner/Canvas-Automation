@@ -44,7 +44,7 @@ end
 def extract_repo_url(f)
   locator = '//div[@class="annotation"]/a/@href'
   url = Nokogiri::HTML(Henkei.new(f).html).xpath(locator)
-  return url
+  return url.to_s
 end
 
 # Given a Canvas submission object, extract the
