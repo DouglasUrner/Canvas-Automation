@@ -45,7 +45,7 @@ To do:
 * PDF Disassembly
   - [Yomu](https://github.com/yomurb/yomu) - appears to be abandoned
   - [Henkai]() - fork of Yomu that is being maintained
-  - [pdf-reader]() - doesn't do HTML, but also doesn't use Apache Tiki and seems faster
+  - [yob/df-reader](https://github.com/yob/pdf-reader) - doesn't do HTML, but also doesn't use Apache Tiki and seems faster
   - [Nokogiri]()
   - [Poppler](https://en.wikipedia.org/wiki/Poppler_(software)) - another PDF reader, claims to support attributes which might provide access to repo URLs.
   - [Indexing PDF For Searching Using Tika, Nokogiri, and Algolia](https://stories.algolia.com/indexing-pdf-or-other-file-contents-for-searching-b2499c23568f)
