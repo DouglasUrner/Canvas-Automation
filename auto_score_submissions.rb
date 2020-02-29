@@ -51,14 +51,19 @@ end
 # URL of the source repository.
 def get_repo_url(s)
   case (s['submission_type'])
+  when nil
+    # Nothing submitted
+    return nil
   when 'online_upload'
     pdf = download_submission(s)
-    return extract_repo_url(pdf)
+    url = extract_repo_url(pdf)
   when 'online_url'
-    return s['url']
+    url = s['url']
   else
+    # XXX: error to stderr or raise an exception
     puts s['submission_type']
   end
+  return ( (url.nil?) ? url : url.gsub(/\/tree\/.*$/, '') )
 end
 
 def score_assignment(scorer, repo_url)
@@ -106,7 +111,7 @@ if (__FILE__ == $0)
     response = CAPI::submissions(@opts[:course], @opts[:assignment], %w[user])
     response.each do |s|
       url = get_repo_url(s)
-      puts "#{s['user']['name']} (#{s['id']}): #{s['submission_type']} #{s['workflow_state']} #{s['grade_matches_current_assignment']} #{url}"
+      puts "#{s['user']['name']} (#{s['user']['id']}): #{s['submission_type']} #{s['workflow_state']} #{s['grade_matches_current_assignment']} #{url}"
       if (s['workflow_state'] == 'submitted' &&
             !s['grade_matches_current_assignment'])
         score_assignment(scorer, url)
