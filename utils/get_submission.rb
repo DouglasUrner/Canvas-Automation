@@ -2,7 +2,7 @@
 
 require 'json'
 
-require_relative 'lib/modules/capi'
+require_relative '../lib/modules/capi'
 
 CAPI::base_url= 'https://canvas.instructure.com/api'
 
