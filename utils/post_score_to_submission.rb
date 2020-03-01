@@ -29,15 +29,19 @@ if (__FILE__ == $0)
     c = @opts[:course]
     a = @opts[:assignment]
     s = @opts[:student]
-    response = CAPI::submission(c, a, s, %w[ user, submission_comments ])
-    CAPI::dump_submission(response)
+    response = CAPI::submission(c, a, s)
+
     payload = {
-      'submission[posted_grade]': ARGV.pop
+      'comment': {
+        'text_comment': ARGV.pop
+      },
+      'submission': {
+        'posted_grade': ARGV.pop
+      },
     }
-    # response['posted_grade'] =
-    # response['text_comment'] = ARGV.pop
+    CAPI::dump(payload)
+
     response = CAPI::score_submission(c, a, s, payload)
-    puts '========================='
-    CAPI::dump_submission(response)
+    CAPI::dump(response)
   end
 end
