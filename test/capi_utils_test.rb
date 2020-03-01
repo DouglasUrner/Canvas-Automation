@@ -19,4 +19,16 @@ class CAPIUtilsTest < Minitest::Test
     includes = CAPI::append_includes(%w[one two three])
     assert_equal '?include[]=one&include[]=two&include[]=three', includes
   end
+
+  def test_set_pagination_no_parameters
+    route = 'foo'
+    route += CAPI::set_pagination(route)
+    assert (route.match?(/\?/)), "#{route}"
+  end
+
+  def test_set_pagination_with_parameters
+    route = 'foo?bar'
+    route += CAPI::set_pagination(route)
+    assert (route =~ /\&/), "#{route}"
+  end
 end
