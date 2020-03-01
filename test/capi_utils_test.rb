@@ -17,6 +17,6 @@ class CAPITest < Minitest::Test
 
   def test_append_includes_with_multiple_items
     includes = CAPI::append_includes(%w[one two three])
-    assert_equal '?include[]=one,two,three', includes
+    assert_equal '?include[]=one&include[]=two&include[]=three', includes
   end
 end
