@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'json'
-
 require_relative '../lib/modules/capi'
 
 CAPI::base_url= 'https://canvas.instructure.com/api'
@@ -29,19 +27,13 @@ if (__FILE__ == $0)
     c = @opts[:course]
     a = @opts[:assignment]
     s = @opts[:student]
-    response = CAPI::submission(c, a, s)
 
     payload = {
-      'comment': {
-        'text_comment': ARGV.pop
-      },
-      'submission': {
-        'posted_grade': ARGV.pop
-      },
+        'comment[text_comment]': "#{ARGV.pop}",
+        'submission[posted_grade]': "#{ARGV.pop}"
     }
-    CAPI::dump(payload)
 
     response = CAPI::score_submission(c, a, s, payload)
-    CAPI::dump(response)
+    # CAPI::dump(response)
   end
 end
