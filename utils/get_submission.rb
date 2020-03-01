@@ -25,6 +25,27 @@ if (__FILE__ == $0)
     o.on('-v')            { |v| @opts[:verbose] = true }
   end.parse!
 
+  if (@opts[:course].match?(/[a-zA-Z]/))
+    # Match course using @opts[:course] as a regexp. If we get
+    # one response use the course ID otherwise print a list of
+    # courses that matched the pattern and exit.
+    course = CAPI::match_course(@opts[:course])
+    case (course)
+    when 0
+      puts "#{$0}: no course matches #{@opts[:course]}"
+      exit -1
+    when (2..)
+      puts "#{$0}: #{course} courses match \'#{@opts[:course]}\':"
+      CAPI::list_courses(@opts[:course]).each do |c|
+        puts "  #{c['name']} (#{c['course_code']}): #{c['id']}"
+      end
+      exit -1
+    else
+      @opts[:course] = course['id']
+      puts "Found #{course['name']} (#{course['id']})"
+    end
+  end
+
   if (@opts[:student])
     response = CAPI::submission(@opts[:course], @opts[:assignment], @opts[:student])
     puts response

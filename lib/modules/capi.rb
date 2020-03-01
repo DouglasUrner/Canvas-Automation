@@ -1,4 +1,5 @@
 require 'json'
+require 'pry'
 require 'rest-client'
 require 'yaml'
 
@@ -23,30 +24,31 @@ module CAPI
   end
 
   def self.get(route, includes = '')
+    # binding.pry
     route += append_includes(includes) if (includes != '')
-    route += "#{(includes == '' ? '?' : '&')}per_page=100"
-    # puts "get(): includes = \'#{includes}\' #{base_url + route}"
+    route += set_pagination(route)
+    puts "get(): includes = \'#{includes}\' #{base_url + route}"
     begin
-      response = JSON.parse(RestClient.get(base_url + route, headers))
+      response = RestClient.get(base_url + route, headers)
     rescue => e
       e.response
     end
+    JSON.parse(response)
   end
 
   def self.put(route, payload, includes = '')
     route += append_includes(includes) if (includes != '')
     # puts "put(): includes = \'#{includes}\' #{base_url + route}"
     begin
-      response = JSON.parse(
-        RestClient.put(
+      response = RestClient.put(
           base_url + route,
           payload.to_json,
           headers
         )
-      )
     rescue => e
       e.response
     end
+    JSON.parse(response)
   end
 
   def self.assignment(cid, aid, includes = '')
@@ -78,9 +80,32 @@ module CAPI
   end
 
   def self.list_courses(pat = '', opts = {})
+    route = '/v1/courses'
+    includes = ''
+    if (opts.empty?)
+      route += '?enrollment_type=teacher'
+    else
+      # Process opts hash.
+    end
+    courses = get(route, includes)
+    courses.sort_by! { |k| k['name'] }
+    if (pat)
+      # binding.pry
+      list = []
+      courses.each do |c|
+        list.push(c) if filter?(c, pat)
+      end
+      courses = list
+    end
+    return courses
   end
 
   def self.match_course(pat, opts = {})
+    courses = list_courses(pat, opts)
+    case (courses.length)
+    when 1 ; return courses[0]
+    else   ; return courses.length
+    end
   end
 
   def self.list_sections(pat = '', opts = {})
@@ -108,5 +133,16 @@ module CAPI
 
   def self.dump(obj)
     puts obj.to_yaml
+  end
+
+  def self.filter?(obj, pat)
+    # TODO: Handle symbols and strings
+    # TODO: Allow regexps or escape them?
+    #obj[:name].match(/#{pat}/) || obj['name'].match(/#{pat}/)
+    obj['name'].match(/#{pat}/)
+  end
+
+  def self.set_pagination(route, items = 100)
+    return "#{(route.match?(/\?/)) ? '&' : '?'}per_page=#{items}"
   end
 end
