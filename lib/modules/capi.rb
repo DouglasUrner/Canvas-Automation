@@ -69,6 +69,34 @@ module CAPI
     put(route, scored_submission, includes)
   end
 
+  # UI helpers
+
+  def self.list_assignments(pat = '', opts = {})
+  end
+
+  def self.match_assignment(pat, opts = {})
+  end
+
+  def self.list_courses(pat = '', opts = {})
+  end
+
+  def self.match_course(pat, opts = {})
+  end
+
+  def self.list_sections(pat = '', opts = {})
+  end
+
+  def self.match_section(pat, opts = {})
+  end
+
+  def self.list_users(pat = '', opts = {})
+  end
+
+  def self.match_user(pat, opts = {})
+  end
+
+  # Utility methods.
+
   def self.append_includes(list)
     # XXX: Guard against empty list?
     includes = ''
