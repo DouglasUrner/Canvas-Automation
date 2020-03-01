@@ -1,5 +1,6 @@
 require 'json'
 require 'rest-client'
+require 'yaml'
 
 # Local Gems
 require_relative './secrets'
@@ -24,9 +25,19 @@ module CAPI
   def self.get(route, includes = '')
     route += append_includes(includes) if (includes != '')
     route += "#{(includes == '' ? '?' : '&')}per_page=100"
-    puts base_url + route
+    #puts base_url + route if (OPTS[:debug])
     begin
       response = JSON.parse(RestClient.get(base_url + route, headers))
+    rescue => e
+      e.response
+    end
+  end
+
+  def self.put(route, payload, includes = '')
+    route += append_includes(includes) if (includes != '')
+    #puts base_url + route if (OPTS[:debug])
+    begin
+      response = JSON.parse(RestClient.put(base_url + route, payload, headers))
     rescue => e
       e.response
     end
@@ -47,6 +58,11 @@ module CAPI
     get(route, includes)
   end
 
+  def self.score_submission(cid, aid, uid, scored_submission, includes = '')
+    route = "/v1/courses/#{cid}/assignments/#{aid}/submissions/#{uid}"
+    put(route, scored_submission, includes)
+  end
+
   def self.append_includes(list)
     # XXX: Guard against empty list?
     includes = ''
@@ -54,5 +70,9 @@ module CAPI
       includes += (includes == '' ? i : ',' + i)
     end
     return "?include[]=#{includes}"
+  end
+
+  def self.dump(obj)
+    puts obj.to_yaml
   end
 end
