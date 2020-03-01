@@ -3,7 +3,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require_relative '../lib/modules/capi'
 
-class CAPITest < Minitest::Test
+class CAPIUtilsTest < Minitest::Test
   extend MiniTest::Spec::DSL
 
   let(:course) { 1807744 }
