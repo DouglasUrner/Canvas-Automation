@@ -25,7 +25,7 @@ module CAPI
   def self.get(route, includes = '')
     route += append_includes(includes) if (includes != '')
     route += "#{(includes == '' ? '?' : '&')}per_page=100"
-    #puts base_url + route if (OPTS[:debug])
+    # puts "get(): includes = \'#{includes}\' #{base_url + route}"
     begin
       response = JSON.parse(RestClient.get(base_url + route, headers))
     rescue => e
@@ -35,9 +35,15 @@ module CAPI
 
   def self.put(route, payload, includes = '')
     route += append_includes(includes) if (includes != '')
-    #puts base_url + route if (OPTS[:debug])
+    # puts "put(): includes = \'#{includes}\' #{base_url + route}"
     begin
-      response = JSON.parse(RestClient.put(base_url + route, payload, headers))
+      response = JSON.parse(
+        RestClient.put(
+          base_url + route,
+          payload.to_json,
+          headers
+        )
+      )
     rescue => e
       e.response
     end
@@ -67,9 +73,9 @@ module CAPI
     # XXX: Guard against empty list?
     includes = ''
     list.each do |i|
-      includes += (includes == '' ? i : ',' + i)
+      includes += ((includes == '') ? '?' : '&') + "include[]=#{i}"
     end
-    return "?include[]=#{includes}"
+    return includes
   end
 
   def self.dump(obj)
