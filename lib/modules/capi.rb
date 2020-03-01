@@ -24,10 +24,9 @@ module CAPI
   end
 
   def self.get(route, includes = '')
-    # binding.pry
     route += append_includes(includes) if (includes != '')
     route += set_pagination(route)
-    puts "get(): includes = \'#{includes}\' #{base_url + route}"
+    # puts "get(): includes = \'#{includes}\' #{base_url + route}"
     begin
       response = RestClient.get(base_url + route, headers)
     rescue => e
@@ -41,10 +40,10 @@ module CAPI
     # puts "put(): includes = \'#{includes}\' #{base_url + route}"
     begin
       response = RestClient.put(
-          base_url + route,
-          payload.to_json,
-          headers
-        )
+        base_url + route,
+        payload,
+        headers
+      )
     rescue => e
       e.response
     end
