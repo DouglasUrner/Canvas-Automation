@@ -69,17 +69,7 @@ if (__FILE__ == $0)
   end
 
   if (@opts[:student])
-    response = CAPI::submission(@opts[:course], @opts[:assignment], @opts[:student])
-    puts response
-    response.each do |k, v|
-      if (k == 'attachments')
-        puts "#{k}:"
-        (v[0]).each do |l, w|
-          puts "\t#{l}: #{w}"
-        end
-      else
-        puts "#{k}: #{v}"
-      end
-    end
+    response = CAPI::submission(@opts[:course], @opts[:assignment], @opts[:student], %w[user])
+    CAPI::dump(response)
   end
 end
