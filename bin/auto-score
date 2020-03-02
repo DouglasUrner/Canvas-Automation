@@ -1,7 +1,52 @@
 #!/bin/bash
 
+# As long as there is at least one more argument, keep looping
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case "$key" in
+    # Assignment ID or regexp to find the assignment - escape special chars
+    -a|--assignment)
+      shift # past the key and to the value
+      A="-a $1"
+      ;;
+    # Course ID or regexp to find the course - escape special chars
+    -c|--course)
+      shift # past the key and to the value
+      C="-c $1"
+      ;;
+    # Student ID or regexp to find the student - escape special chars
+    -s|--student)
+      shift # past the key and to the value
+      S="-s $1"
+      ;;
+    # Enable debug messages
+    -d|--debug)
+      D='-d'
+      ;;
+    # Post score and comments to Canvas
+    -p|--post)
+      P='-p'
+      ;;
+    # Be loquacious
+    -v|--verbose)
+      V='-v'
+      ;;
+    # # This is an arg=value type option. Will catch -o=value or --output-file=value
+    # -o=*|--output-file=*)
+    # # No need to shift here since the value is part of the same string
+    # OUTPUTFILE="${key#*=}"
+    # ;;
+    *)
+    # Do whatever you want with extra options
+      echo "Unknown option '$key'"
+      ;;
+  esac
+  # Shift after checking all the cases to get the next option
+  shift
+done
+
 # Clear the tmp directory
 rm -rf tmp/*
 
-./lib/auto_score_submissions.rb -c 1822662 -a 13795874 -s 24660121 2>&1 |
+./lib/auto_score_submissions.rb $D $P $V $C $A $S 2>&1 |
   grep -v 'cmap format 4 subtable is empty'
