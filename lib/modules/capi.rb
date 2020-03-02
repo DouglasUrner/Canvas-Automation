@@ -65,9 +65,9 @@ module CAPI
     get(route, includes)
   end
 
-  def self.score_submission(cid, aid, uid, scored_submission, includes = '')
+  def self.score_submission(cid, aid, uid, score, includes = '')
     route = "/v1/courses/#{cid}/assignments/#{aid}/submissions/#{uid}"
-    put(route, scored_submission, includes)
+    put(route, score, includes)
   end
 
   # UI helpers

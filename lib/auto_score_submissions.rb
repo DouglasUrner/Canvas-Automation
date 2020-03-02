@@ -88,6 +88,15 @@ def get_repo_url(s)
   return ( (url.nil?) ? url : url.gsub(/\/tree\/.*$/, '') )
 end
 
+# Return the name of the downloaded scoring script - or exit if we fail.
+def get_scorer()
+  # XXX: need to handle failed requests / bad args.
+  response = CAPI::assignment(@opts[:course], @opts[:assignment])
+
+  scorer_url = get_scorer_url(response['description'])
+  scorer = download_scorer(scorer_url)
+end
+
 # Parse the HTML from the assignment description to generate the URL
 # of the auto_score module in the source repo on GitHub.
 def get_scorer_url(desc)
@@ -110,20 +119,32 @@ def needs_scoring?(s)
         s['grade_matches_current_assignment'] != true)) ? true : false
 end
 
+def post_score(cid, aid, sid, fb)
+  payload = {
+    'comment[text_comment]': "#{fb['comments']}",
+    'submission[posted_grade]': "#{fb['score']}"
+  }
+  binding.pry
+  CAPI::score_submission(cid, aid, sid, payload)
+end
+
 def score_assignment(scorer, repo_url)
   if (repo_url.length == 0)
-    score = "0\nThe link to your repository is missing. Please correct and resubmit"
+    fb['score'] = 0
+    fb['comments'] = 'The link to your repository is missing. Please correct and resubmit'
   else
     score_cmd = "ruby #{scorer} #{repo_url}"
     puts score_cmd  if (@opts[:debug])
-    score = %x( #{score_cmd} )
+    fb = %x( #{score_cmd} )
   end
-  puts score
+  return JSON.parse(fb)
 end
 
 def submitted?(s)
   (s['submitted_at'] == nil) ? false : true
 end
+
+
 
 if (__FILE__ == $0)
   require 'optparse'
@@ -140,16 +161,13 @@ if (__FILE__ == $0)
     o.on('-a ASSIGNMENT') { |v| @opts[:assignment] = v }
     o.on('-c COURSE')     { |v| @opts[:course] = v }
     o.on('-d')            { |v| @opts[:debug] = true }
+    o.on('-p')            { |v| @opts[:post_scores] = true }
     o.on('-s STUDENT')    { |v| @opts[:student] = v }
     o.on('-T TMPDIR')     { |v| @opts[:tmp_dir] = v }
     o.on('-v')            { |v| @opts[:verbose] = true }
   end.parse!
 
-  # XXX: need to handle failed requests / bad args.
-  response = CAPI::assignment(@opts[:course], @opts[:assignment])
-
-  scorer_url = get_scorer_url(response['description'])
-  scorer = download_scorer(scorer_url)
+  scorer = get_scorer()
 
   cid = get_course_id(@opts[:course])
   aid = get_assignment_id(cid, @opts[:assignment])
@@ -159,15 +177,24 @@ if (__FILE__ == $0)
     response = CAPI::submission(cid, aid, sid, %w[user])
     url = get_repo_url(response)
     breadcrumbs(response, url)
-    if (submitted?(response))
-      score_assignment(scorer, url) if (needs_scoring?(response))
+    if (submitted?(response) && needs_scoring?(response))
+      score = score_assignment(scorer, url)
+      # binding.pry
+      CAPI::dump(score) if (@opts[:verbose])
+      if (@opts[:post_scores])
+        post_score(cid, aid, sid, score)
+      else
+      end
     end
   else
     response = CAPI::submissions(cid, aid, %w[user])
     response.each do |s|
       url = get_repo_url(s)
       breadcrumbs(s, url)
-      score_assignment(scorer, url) if (needs_scoring?(s))
+      if (submitted?(response) && needs_scoring?(response))
+        score = score_assignment(scorer, url)
+        post_score(cid, aid, sid, score) if (@opts[:post_scores])
+      end
     end
   end
 end
