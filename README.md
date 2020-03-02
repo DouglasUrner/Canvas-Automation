@@ -6,6 +6,16 @@ Pull student progress info from Canvas.
 
 ### auto_score_submissions
 
+* Git / GitHub workflow
+* Coding standards
+* Unity skills & knowledge
+  - Parse & examine the scene file
+  - Tests?
+* Code development (algorithms & structures)
+* C# skills & knowledge
+
+#### Process
+
 Given an assignment on Canvas:
 
 * Get the assignment
