@@ -124,14 +124,14 @@ def post_score(cid, aid, sid, fb)
     'comment[text_comment]': "#{fb['comments']}",
     'submission[posted_grade]': "#{fb['score']}"
   }
-  binding.pry
   CAPI::score_submission(cid, aid, sid, payload)
 end
 
 def score_assignment(scorer, repo_url)
   if (repo_url.length == 0)
     fb['score'] = 0
-    fb['comments'] = 'The link to your repository is missing. Please correct and resubmit'
+    fb['comments'] = 'The link to your repository is missing. '                +
+                     'Please correct and resubmit'
   else
     score_cmd = "ruby #{scorer} #{repo_url}"
     puts score_cmd  if (@opts[:debug])
