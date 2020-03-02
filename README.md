@@ -17,14 +17,16 @@ Given an assignment on Canvas:
   - Get the URL of the GitHub repository.
   - Run the scorer
 * Post score and comment to Canvas.
+  - Current assignments have components that can't be machine scored. Hand scoring or machine scoring will set the graded attribute. Maybe this could be worked around by using the negative of my UID for machine scoring and hand scoring before machine scoring. It might make more sense to split the machine scored assignments from the hand scored ones. How does an assignment look when it has been machine scored (scoring ID in negative)? A further step would be to investigate tools for parsing a Google Doc to see if it is possible to pull data out of the table and display it as the automatic scoring is happening so that there is only one scoring event.
+* Make it easier to share and edit comments - store them in a shared YAML file?
 * Output a table / import file for Skyward.
 
 To do:
 
-* Handle pagination
-* "Friendly" course/section, assignment, and student references
-* Break out common scoring code
-* Pull URL out of a Google Doc
+* [-] Handle pagination
+* [-] "Friendly" course/section, assignment, and student references
+* [ ] Break out common scoring code
+* [x] Pull URL out of a Google Doc
 
 ## Notes
 
