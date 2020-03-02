@@ -72,10 +72,32 @@ module CAPI
 
   # UI helpers
 
-  def self.list_assignments(pat = '', opts = {})
+  def self.list_assignments(cid, pat = '', opts = {})
+    route = "/v1/courses/#{cid}/assignments"
+    includes = ''
+    if (opts.empty?)
+    else
+      # Process opts hash.
+    end
+    assignments = get(route, includes)
+    assignments.sort_by! { |k| k['name'] }
+    if (pat)
+      # binding.pry
+      list = []
+      assignments.each do |a|
+        list.push(a) if filter?(a, pat)
+      end
+      assignments = list
+    end
+    return assignments
   end
 
-  def self.match_assignment(pat, opts = {})
+  def self.match_assignment(cid, pat, opts = {})
+    assignment = list_assignments(cid, pat, opts)
+    case (assignment.length)
+    when 1 ; return assignment[0]
+    else   ; return assignment.length
+    end
   end
 
   def self.list_courses(pat = '', opts = {})
