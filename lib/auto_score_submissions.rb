@@ -14,8 +14,9 @@ def breadcrumbs(s, url)
   puts "#{s['user']['name']} (#{s['user']['id']}): #{s['submission_type']} #{s['workflow_state']} #{s['grade_matches_current_assignment']} #{url}"
 end
 
-def download_scorer(url)
-  scorer_name = "score-#{@opts[:assignment]}.rb"
+def download_scorer(aid, url)
+  puts url
+  scorer_name = "score-#{aid}.rb"
   cmd = "curl -s #{url} -o #{scorer_name}"
   # TODO: check return - execute command method.
   # XXX: There is a potential injection attack here since the scorer URL is
@@ -41,20 +42,20 @@ def extract_repo_url(f)
 end
 
 def get_assignment_id(cid, pat)
-  if (@opts[:assignment].match?(/\d/))
-    return @opts[:assignment]
+  if (pat.match?(/^\d+$/))
+    return pat
   else
     # Match assignment using @opts[:assignment] as a regexp. If we get
     # one response use the assignment ID otherwise print a list of
     # assignment that matched the pattern and exit.
-    assignment = CAPI::match_assignment(@opts[:course], @opts[:assignment])
+    assignment = CAPI::match_assignment(cid, pat)
     case (assignment)
     when 0
-      puts "#{$0}: no assignment matches #{@opts[:assignment]}"
+      puts "#{$0}: no assignment matches #{pat}"
       exit -1
     when (2..)
-      puts "#{$0}: #{assignment} assignments match \'#{@opts[:assignment]}\':"
-      CAPI::list_assignments(@opts[:assignment]).each do |c|
+      puts "#{$0}: #{assignment} assignments match \'#{pat}\':"
+      CAPI::list_assignments(pat).each do |c|
         puts "  #{c['name']}: #{c['id']}"
       end
       exit -1
@@ -66,7 +67,28 @@ def get_assignment_id(cid, pat)
 end
 
 def get_course_id(pat)
-  return @opts[:course]
+  if (pat.match?(/^\d+$/))
+    return pat
+  else
+    # Match course using @opts[:course] as a regexp. If we get
+    # one response use the course ID otherwise print a list of
+    # courses that matched the pattern and exit.
+    course = CAPI::match_course(pat)
+    case (course)
+    when 0
+      puts "#{$0}: no course matches #{pat}"
+      exit -1
+    when (2..)
+      puts "#{$0}: #{course} courses match \'#{pat}\':"
+      CAPI::list_courses(pat).each do |c|
+        puts "  #{c['name']}: #{c['id']}"
+      end
+      exit -1
+    else
+      puts "Found #{course['name']} (#{course['id']})" if (@opts[:debug])
+      return course['id']
+    end
+  end
 end
 
 # Given a Canvas submission object, extract the
@@ -89,12 +111,12 @@ def get_repo_url(s)
 end
 
 # Return the name of the downloaded scoring script - or exit if we fail.
-def get_scorer()
+def get_scorer(cid, aid)
   # XXX: need to handle failed requests / bad args.
-  response = CAPI::assignment(@opts[:course], @opts[:assignment])
+  response = CAPI::assignment(cid, aid)
 
   scorer_url = get_scorer_url(response['description'])
-  scorer = download_scorer(scorer_url)
+  scorer = download_scorer(aid, scorer_url)
 end
 
 # Parse the HTML from the assignment description to generate the URL
@@ -167,11 +189,11 @@ if (__FILE__ == $0)
     o.on('-v')            { |v| @opts[:verbose] = true }
   end.parse!
 
-  scorer = get_scorer()
-
   cid = get_course_id(@opts[:course])
   aid = get_assignment_id(cid, @opts[:assignment])
   sid = get_student_id(@opts[:student])
+
+  scorer = get_scorer(cid, aid)
 
   if (@opts[:student])
     response = CAPI::submission(cid, aid, sid, %w[user])
@@ -189,11 +211,13 @@ if (__FILE__ == $0)
   else
     response = CAPI::submissions(cid, aid, %w[user])
     response.each do |s|
-      url = get_repo_url(s)
-      breadcrumbs(s, url)
-      if (submitted?(response) && needs_scoring?(response))
+      if (submitted?(s) && needs_scoring?(s))
+        url = get_repo_url(s)
+        breadcrumbs(s, url)
         score = score_assignment(scorer, url)
-        post_score(cid, aid, sid, score) if (@opts[:post_scores])
+        post_score(cid, aid, s['user']['id'], score) if (@opts[:post_scores])
+      else
+        breadcrumbs(s, '') if (@opts[:verbose])
       end
     end
   end
