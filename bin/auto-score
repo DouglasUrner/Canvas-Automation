@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Clear the tmp directory
+rm -rf tmp/*
+
+./lib/auto_score_submissions.rb -c 1822662 -a 13795874 -s 24660121 2>&1 |
+  grep -v 'cmap format 4 subtable is empty'
