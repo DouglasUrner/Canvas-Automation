@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 
-require_relative 'lib/modules/casl'
-require_relative 'lib/comments'
+#require_relative 'lib/modules/casl'
+require_relative 'lib/classes/comments'
+require_relative 'lib/classes/repository'
 
 # Clone a GitHub repository holding a Unity project and do mechanical checks
 # for completion of the assignment and for correctness. This file is the
@@ -15,7 +16,7 @@ OPTS = {
   base_url: 'https://github.com/',
   branch: '',
   clone: 'git clone',
-  comments_file: 'lib/comments.yml',
+  comments_file: 'lib/classes/comments.yml',
   debug: false,
   empty_script_size: 323,
   gitignore_size: 500,
@@ -49,9 +50,58 @@ if (__FILE__ == $0)
   # puts comments.dump()
 
   # Clone the project repository.
-  points, comment = CASL::clone_and_score(remote)
-  CASL::done(@score, @comments, true) if (points == 0) # Clone failed, quit
-  @score += points
+  repo = Repository.new(remote)
 
-  CASL::done(@score, @comments, @resubmit)
+  rv, stdout, stderr = repo.clone(repo.remote)
+  puts "#{repo.branch}: #{repo.item_count} files"
+  rv, stdout, stderr = repo.checkout('lesson-1')
+  puts "#{repo.branch}: #{repo.item_count} files"
+
+  #### Git Workflow ####
+
+  # Attempt to clone the repository.
+
+  # Check for .gitignore and check the file/item count.
+
+  # Check for the lesson branch.
+  # - If not found, check close matches.
+  # - If we fail, adjust score and repeat checks on master.
+
+  # Check for expected directories.
+
+  # Check for expected files.
+  # - And for files that should have been deleted.
+  # - Expect exact name matches, deduct something for misnamed
+  #   files, then store names for other checks. Use a hash of
+  #   the cannonical name and the actual name.
+
+  # Check for multiple commits.
+  # - Count entries in git log.
+  # - Require at least one commit per class, expect more.
+  # - Extra credit for commits outside of class hours?
+
+  # Check for merge to master.
+  # - Diff master against branch?
+  # - Check git log?
+
+  #### Steps in Unity ####
+
+  # Check that scene file has been modified.
+
+  # Parse & examine the scene file.
+  # - Simple greps to start with.
+  # - Count game objects.
+  # - Grep for expected names.
+  # - Count components.
+
+  #### Coding Scripts ####
+
+  # Coding conventions
+  # - CamelCase
+  # - Verify compilation?
+  # - Grep for significant code fragments.
+  # - File size / lines of code.
+  # - Tests
+  # - Use MOSS?
+
 end
