@@ -3,7 +3,11 @@
 require 'open3'
 include Open3
 
+require_relative '../modules/ca_util'
+
 class Repository
+  extend CAU
+
   attr_reader :branch, :host, :local, :local_path, :prefix, :remote, :url
 
   def initialize(url)
@@ -14,9 +18,20 @@ class Repository
     @local_path = nil
   end
 
+  def branch_list
+    cmd = "cd #{@local_path}; git branch --list"
+    rv, stdout, stderr = CAU.run_command(cmd)
+    if (rv == 0)
+      list = stdout
+    else
+      puts "branch_list(): #{stderr}"
+    end
+    return list
+  end
+
   def checkout(branch)
-    cmd = "cd #{@local_path}; git checkout #{branch}"
-    rv, stdout, stderr = run_command(cmd)
+    cmd = "cd #{@local_path}; git rev-parse --verify #{branch} && git checkout #{branch}"
+    rv, stdout, stderr = CAU.run_command(cmd)
     if (rv == 0)
       @branch = branch
     else
@@ -29,7 +44,7 @@ class Repository
   def clone(local, prefix = 'tmp')
     git_clone = 'git clone'
     cmd = "#{git_clone} #{@url} #{prefix + '/' if (prefix != '')}#{local}"
-    rv, stdout, stderr = run_command(cmd)
+    rv, stdout, stderr = CAU.run_command(cmd)
     if (rv == 0)
       @local = local
       @prefix = prefix
@@ -47,15 +62,6 @@ class Repository
     Dir[ "#{@local_path}#{'/' + from if (from != '')}/**/*" ].length
   end
 
-  def run_command(cmd)
-    fd0, fd1, fd2, wait = popen3(cmd)
-    fd0.close
-
-    stdout = fd1.read ; fd1.close
-    stderr = fd2.read ; fd2.close
-
-    return wait.value, stdout, stderr
-  end
 end
 
 if (__FILE__ == $0)
@@ -66,5 +72,8 @@ if (__FILE__ == $0)
   repo = Repository.new(repo_url)
 
   rv, stdout, stderr = repo.clone(repo.remote)
+
+  puts repo.branch_list
+  puts repo.checkout('lesson-1')
 
 end
