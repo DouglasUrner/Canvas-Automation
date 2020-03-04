@@ -1,0 +1,11 @@
+# Parameters for the auto_score boilerplate. This file is read
+# by config_generator and used to drive generating the actual
+# config file for auto_score by adding metadata.
+expected_branches:
+  - cannonical_name: master
+  - cannonical_name: lesson-1
+expected_directories:
+  - cannonical_name: Assets/Scenes
+expected_files:
+  - cannonical_name: .gitignore
+  - cannonical_name: Assets/Scenes/Prototype 4.unity
