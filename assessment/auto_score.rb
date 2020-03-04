@@ -100,7 +100,8 @@ if (__FILE__ == $0)
   # - CamelCase
   # - Verify compilation?
   # - Grep for significant code fragments.
-  # - File size / lines of code.
+  # - File size / lines of code. Count the number of lines of
+  #   code written each day as a measure of progress / struggle.
   # - Tests
   # - Use MOSS?
 
