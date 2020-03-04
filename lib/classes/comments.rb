@@ -1,11 +1,10 @@
 #!/usr/bin/env ruby
 
 require 'liquid'
-require 'pry'
 require 'yaml'
 
 class Comments
-  def initialize(file = 'lib/comments.yml')
+  def initialize(file = 'lib/classes/comments.yml')
     msgs = YAML.load(File.read(file))
 
     @comments  = []
@@ -16,7 +15,7 @@ class Comments
     end
   end
 
-  def dump()
+  def dump
     str = ''
     if ( @comments.length > 1 || @comments[0].length > 0 )
       @comments.each do |c|
@@ -42,4 +41,5 @@ class Comments
 end
 
 if (__FILE__ == $0)
+  require 'pry'
 end
